@@ -1,11 +1,3 @@
-- name: Create Homework Assignment project
-  tower_project:
-    name: "{{ proj_name }}"
-    description: "{{ proj_descr }} "
-    organization: "{{ org_name }}"
-    state: present
-    tower_config_file: "{{ tower_config }}"
-
 - name: Machine Credentail to connect to workstation using openstack.pub
   tower_credential:
     name: "{{ ssh_cred_name }}"
@@ -18,12 +10,21 @@
     ssh_key_data: "{{ user_cred_path }}"
     username: "{{ user_cred_name }}"
 
+- name: Create Homework Assignment project
+  tower_project:
+    name: "{{ proj_name }}"
+    description: "{{ proj_descr }} "
+    organization: "{{ org_name }}"
+    state: present
+#    tower_config_file: "{{ tower_config }}"
+
+
 - name: Create Inventory
   tower_inventory:
     name: "{{ static_inventory_name }}"
     organization: "{{ org_name }}"
     state: present
-    tower_config_file: "{{ tower_config }}"
+#    tower_config_file: "{{ tower_config }}"
     
 
 - name: Create Group in static inventory 
@@ -31,24 +32,30 @@
       name: "{{ group_name }}"
       inventory: "{{ static_inventory_name }}"
       state: present
-      tower_config_file: "{{ tower_config }}"
 
 
 - name: Add tower host
   tower_host:
-    name: "{{host_name}}"
+    name:        "{{host_name}}"
     description: "workstation"
-    inventory: "{{static_inventory_name}}"
-    state: present
-    tower_host: "{{ host_tower }}"
+    inventory:   "{{static_inventory_name}}"
+    state:       present
+    tower_host:  "{{ host_tower }}"
 #    tower_username: admin
 #    tower_password: r3dh4t1!
 #    tower_verify_ssl: no
 
+#- name: Create Group in static inventory and Associate workstation host to group
+#  tower_group:
+#    name:              "{{ group_name }}"
+#    inventory:         "{{ static_inventory_name }}"
+#    state:             present
+#   tower_config_file: "{{ tower_config }}"
+#    hosts:             "{{ host_name }}"
+
 - name: Associate workstation host to group
-  
-# command: | 
-#   tower-cli host associate --host "{{host_name}}" --group "{{group_name}}"
+  command: | 
+    tower-cli host associate --host "{{host_name}}" --group "{{group_name}}"
 
 
 - name: Tower Creds key file
