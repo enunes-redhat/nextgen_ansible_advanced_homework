@@ -20,6 +20,8 @@
     name:           "{{ proj_name }}"
     description:    "{{ proj_descr }} "
     organization:   "{{ org_name }}"
+    scm_type:       "{{ proj_scm_type }}"
+    scm_url:        "{{ proj_scm_url }}"
     state:          present
 
 - name: Create Inventory
