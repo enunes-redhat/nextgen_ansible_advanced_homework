@@ -8,8 +8,22 @@ proj_descr: "Homework Assignment"
 tower_config: "~/.tower_cli.cfg"
 host_tower: tower1.{{tower_GUID}}.example.opentlc.com
 ##### Create a Vault #####
-user_name: admin         #
-password: "r3dh4t1!"       #
+#user_name: admin         #
+user_name: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35666666646538396439333537656330393433613937343837356536663431396363616635383931
+          3339336535623233393362396335623965396261383331610a303536656335353764623830326465
+          64353534656132383563666438386461396135646466386539636234623635646238393537333336
+          3830336563663861390a313835386434666136636164653035373930386363373065656666363437
+          3135
+#password: "r3dh4t1!"       #
+password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          31323264313663386434313135326135643337356431376564316633313061623438353961616238
+          6338336466636231326465333831326665393637623262350a353465633032353235626431353065
+          31386563303564626465336330336136353039646462643363313366613933303133393763666532
+          6263613061623066360a353732353634353635653130373166616562306130353532346533386666
+          6562
 ##### ###### ##### #### ##
 ssh_cred_name: "Connect_to_workstation"
 user_cred_name: "cloud-user"
@@ -33,6 +47,7 @@ aws_provision_playbook: aws_provision.yml
 ec2_dynamic_inventory: "Prod Three tier inventory"
 aws_ssh_playbook: aws_creds.yml
 opentlc_cred_name: "Opentlc key"
+opentlc_cred_path: "/root/.ssh/mykey.pem"
 job_template_aws_ssh_keys: "08_Prod SSH keys three tier app"
 ec2_inventory_source: "03_06_Prod Three tier inventory source"
 aws_region_name: "{{ REGION_NAME }}"
