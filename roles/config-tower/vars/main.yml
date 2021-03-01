@@ -6,11 +6,9 @@ scm_url: "{{ github_repo }}"
 proj_name: "00_Homework Assignment"
 proj_descr: "Homework Assignment"
 proj_scm_type: git
-proj_scm_url: {{ GITHUB_REPO }}
+proj_scm_url: https://github.com/enunes-redhat/nextgen_ansible_advanced_homework.git
 tower_config: "~/.tower_cli.cfg"
 host_tower: tower1.{{tower_GUID}}.example.opentlc.com
-##### Create a Vault #####
-#user_name: admin         #
 user_name: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35666666646538396439333537656330393433613937343837356536663431396363616635383931
@@ -18,7 +16,6 @@ user_name: !vault |
           64353534656132383563666438386461396135646466386539636234623635646238393537333336
           3830336563663861390a313835386434666136636164653035373930386363373065656666363437
           3135
-#password: "r3dh4t1!"       #
 password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           31323264313663386434313135326135643337356431376564316633313061623438353961616238
@@ -26,7 +23,6 @@ password: !vault |
           31386563303564626465336330336136353039646462643363313366613933303133393763666532
           6263613061623066360a353732353634353635653130373166616562306130353532346533386666
           6562
-##### ###### ##### #### ##
 ssh_cred_name: "Connect_to_workstation"
 user_cred_name: "cloud-user"
 user_cred_path: "/root/.ssh/openstack.pem"
