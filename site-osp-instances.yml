@@ -5,31 +5,31 @@
   roles:
    - osp-servers
 
-  tasks: 
+# tasks: 
 
-  - name: Get Instance information
-    os_server_info:
-      cloud: openstack
-      region_name: regionOne
-    register: r_os_servers
+# - name: Get Instance information
+#   os_server_info:
+#     cloud: openstack
+#     region_name: regionOne
+#   register: r_os_servers
   
-  - name: Add host
-    add_host:
-      name: "{{ item.public_v4 }}"
-      ansible_user: cloud-user
+# - name: Add host
+#   add_host:
+#     name: "{{ item.public_v4 }}"
+#     ansible_user: cloud-user
 #      ansible_ssh_private_key_file: "{{ ansible_env.HOME }}/.ssh/test_id_rsa"
-      group:
-        - "{{ item.metadata.group }}"
-        - "{{ item.metadata.deployment_name }}"
-    loop: "{{ r_os_servers.openstack_servers }}"
+#     group:
+#       - "{{ item.metadata.group }}"
+#       - "{{ item.metadata.deployment_name }}"
+#   loop: "{{ r_os_servers.openstack_servers }}"
     
-- name: Create Internal Repo into Instances
-  hosts: apps:frontends:appdbs
-  gather_facts: false
-  become: true
-  tasks:
-    - name: get the Repo and copy into /etc/yum.repos.d
-      get_url:
-        url: http://www.opentlc.com/download/ansible_bootcamp/repo/internal.repo
-        dest: /etc/yum.repos.d/internal.repo
-        mode: '0644'
+#- name: Create Internal Repo into Instances
+#  hosts: apps:frontends:appdbs
+#  gather_facts: false
+#  become: true
+#  tasks:
+#    - name: get the Repo and copy into /etc/yum.repos.d
+#      get_url:
+#        url: http://www.opentlc.com/download/ansible_bootcamp/repo/internal.repo
+#        dest: /etc/yum.repos.d/internal.repo
+#        mode: '0644'
