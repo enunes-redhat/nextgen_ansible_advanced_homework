@@ -17,9 +17,10 @@
     userdata: |
       #!/bin/bash
       curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
-      curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem
+      curl -o /tmp/openstack.pem http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem
       cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
       cat /tmp/openstack.pem >> /home/cloud-user/.ssh/authorized_keys
+#      curl -o /etc/yum.repos.d/internal.repo http://www.opentlc.com/download/ansible_bootcamp/repo/internal.repo
   loop: "{{ osp_servers }}"      
   loop_control:
     loop_var: __openstack_server
@@ -28,19 +29,12 @@
   register: r_instances
   tags: create_osp_srv
 
-#- when: openstack_server_state != 'absent' | default(true)
-#  block:
-
-- name: debug instance names
-  debug:
-    msg: "{{ r_instances }}"
 
 - name: Add floating IP to instances
   os_floating_ip:
     cloud:        openstack
     state:        "{{ openstack_server_state | default('present') }}"
     reuse:        yes
-#    server:       "{{ __instance.__openstack_server.instance_name }}"
     server:       "{{ __instance.__openstack_server.name }}"
     network:      ext_network
     wait:         true
@@ -51,9 +45,6 @@
   register: r_floating_ips
   tags: create_osp_srv
 
-- name: debug instance names
-  debug:
-    msg: "{{ r_floating_ips }}"
 
 - name: Wait for servers by name to be available
   wait_for:
@@ -66,3 +57,4 @@
     loop_var: __fip
   delegate_to: "{{ inventory_hostname }}"
   tags: create_osp_srv
+
