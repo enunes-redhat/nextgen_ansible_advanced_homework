@@ -26,8 +26,8 @@
   - name: Copy private key to local user
     get_url:
       url: http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem 
-      dest: ~/.ssh/test_id_rsa
-      mode: 0600
+      dest: "~/.ssh/test_id_rsa"
+      mode: '0600'
     
 - name: Create Internal Repo into Instances
   hosts: apps:frontends:appdbs
