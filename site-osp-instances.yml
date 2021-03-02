@@ -27,6 +27,7 @@
 - name: Create Internal Repo into Instances
   hosts: apps:frontends:appdbs
   gather_facts: false
+  become: true
   tasks:
     - name: get the Repo and copy into /etc/yum.repos.d
       get_url:
