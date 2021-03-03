@@ -1,34 +1,46 @@
-- hosts: workstation
-  gather_facts: false
+---
+- name: End to end smoke tests
+  hosts: apps:appdbs
+  gather_facts: true
+  become: true
+  tags:
+    - osp.smoke 
+
   tasks:
-  - name: OpenStack servers
-    os_server_info:
-      cloud: openstack
-      region_name: regionOne
-    register: r_os_servers
 
- - name: Teste OSP Server Port 22
-   wait_for:
-     host: "{{ __instance.public_v4 }}"
-     port: 22
-     timeout: 300
-   loop: "{{ r_os_servers.openstack_servers }}"
-   loop_control:
-     loop_var: __instance
+    - debug:
+        msg: 
+          - "IP is {{ hostvars['appdb1']['inventory_hostname'] }}"
+          - "First App server  {{ groups.apps[0] }}" 
+        verbosity: 2        
 
+    - name: Smoketest Postgres database
+      postgresql_ping:
+        db: flask_db
+        login_host: "{{ groups.appdbs[0].ansible_host }}"
+        login_user: flask
+        login_password: redhat
+        ssl_mode: disable
+      delegate_to: "{{ groups.apps[0] }}"
+      run_once: true
+      tags:
+        - osp.smoke
 
- - name: Curl website
-   uri:
-     url: "http://frontend1.{{ GUID }}.example.opentlc.com/ping"
-      return_content: yes
-    until: '"alive" in result.content'
-    retries: 1
-    delay: 1
-    register: result
-    delegate_to: localhost 
+- name: End to end smoke tests
+  hosts: apps
+  become: false
+  gather_facts: false
+  tags:
+    - osp.smoke
+  tasks:
+ 
+    - name: Check webserver for correct response
+      uri:
+        url: "http://frontend1.{{ GUID }}.example.opentlc.com"
+        return_content: yes
+      until: '"Welcome to Tomcat" in result.content'
+      retries: 10
+      delay: 1
+      register: result
+      delegate_to: localhost
 
-  - name: Fail if 'Ansible has done its job' is not in the page content
-    fail:
-    when: "'Ansible has done its job' not in webpage.results[0].content"
-    tags:
-      - osp.smoke

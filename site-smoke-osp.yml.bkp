@@ -1,0 +1,34 @@
+- hosts: workstation
+  gather_facts: false
+  tasks:
+  - name: OpenStack servers
+    os_server_info:
+      cloud: openstack
+      region_name: regionOne
+    register: r_os_servers
+
+ - name: Teste OSP Server Port 22
+   wait_for:
+     host: "{{ __instance.public_v4 }}"
+     port: 22
+     timeout: 300
+   loop: "{{ r_os_servers.openstack_servers }}"
+   loop_control:
+     loop_var: __instance
+
+
+ - name: Curl website
+   uri:
+     url: "http://frontend1.{{ GUID }}.example.opentlc.com/ping"
+      return_content: yes
+    until: '"alive" in result.content'
+    retries: 1
+    delay: 1
+    register: result
+    delegate_to: localhost 
+
+  - name: Fail if 'Ansible has done its job' is not in the page content
+    fail:
+    when: "'Ansible has done its job' not in webpage.results[0].content"
+    tags:
+      - osp.smoke
