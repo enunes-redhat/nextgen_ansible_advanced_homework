@@ -17,12 +17,12 @@
      loop_var: __instance
 
 
-  - name: Curl website
-    uri:
-      url: "http://frontend1.{{ GUID }}.example.opentlc.com/ping"
+ - name: Curl website
+   uri:
+     url: "http://frontend1.{{ GUID }}.example.opentlc.com/ping"
       return_content: yes
     until: '"alive" in result.content'
-    retries: 10
+    retries: 1
     delay: 1
     register: result
     delegate_to: localhost 
